@@ -86,6 +86,7 @@ CLostarkSimulatorDlg::CLostarkSimulatorDlg(CWnd* pParent /*=nullptr*/)
 	, currentCount(0)
 	, meetMrJang(0)
 	, fragmentPrice(0)
+	, reinforcementLog(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -122,6 +123,8 @@ void CLostarkSimulatorDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_MEET_MR_JANG, meetMrJang);
 	DDX_Text(pDX, IDC_FRAGMENT_PRICE, fragmentPrice);
 	DDX_Control(pDX, IDC_SELECT_EQUIP, selectEquipControl);
+	DDX_Control(pDX, IDC_REINFORCEMENT_LOG, reinforcementLogControl);
+	DDX_Text(pDX, IDC_REINFORCEMENT_LOG, reinforcementLog);
 }
 
 BEGIN_MESSAGE_MAP(CLostarkSimulatorDlg, CDialogEx)
@@ -131,6 +134,7 @@ BEGIN_MESSAGE_MAP(CLostarkSimulatorDlg, CDialogEx)
 	ON_NOTIFY(NM_CUSTOMDRAW, IDC_ADDITIONAL1_SLIDER, &CLostarkSimulatorDlg::OnNMCustomdrawAdditional1Slider)
 	ON_BN_CLICKED(IDC_REINFORCE, &CLostarkSimulatorDlg::OnBnClickedReinforce)
 	ON_BN_CLICKED(IDC_INITIALIZING, &CLostarkSimulatorDlg::OnBnClickedInitializing)
+	ON_CBN_SELCHANGE(IDC_SELECT_EQUIP, &CLostarkSimulatorDlg::OnCbnSelchangeSelectEquip)
 END_MESSAGE_MAP()
 
 
@@ -265,6 +269,7 @@ void CLostarkSimulatorDlg::Initialize() {
 	additional1String = "0/0";
 	additional2String = "0/0";
 	additional3String = "0/0";
+	reinforcementLog = "";
 	UpdateData(FALSE);
 }
 
@@ -291,7 +296,8 @@ void CLostarkSimulatorDlg::OnBnClickedReinforce()
 
 		ud d(0, 9999);
 		if (d(gen) < curProb) {
-			MessageBox("성공");
+			sprintf(msg, "%s +%d강화 성공(%d회)\r\n", curSel < 1 ? "무기" : "방어구", currentLevel, currentCount);
+			reinforcementLog += msg;
 			++currentLevel;
 			curCom = 0;
 			if (currentLevel < 25)
@@ -301,13 +307,15 @@ void CLostarkSimulatorDlg::OnBnClickedReinforce()
 			currentCount = 0;
 		}
 		else {
-			MessageBox("실패");
+			sprintf(msg, "%s +%d강화 실패\r\n", curSel < 1 ? "무기" : "방어구", currentLevel, currentCount);
+			reinforcementLog += msg;
 			curCom = min({ 10000LL, curCom + (ll)(curProb * 0.465) });
 			curProb = min({ curProb + cur / 10, cur * 2, 10000LL });
 			if (curCom == 10000)
 				++meetMrJang;
 		}
 		UpdateCurrentValue();
+		reinforcementLogControl.SetScrollPos(1, 1e9);
 		UpdateData(FALSE);
 	}
 	else {
@@ -324,6 +332,13 @@ void CLostarkSimulatorDlg::UpdateCurrentValue() {
 
 
 void CLostarkSimulatorDlg::OnBnClickedInitializing()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	Initialize();
+}
+
+
+void CLostarkSimulatorDlg::OnCbnSelchangeSelectEquip()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	Initialize();

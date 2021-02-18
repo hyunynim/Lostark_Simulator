@@ -111,4 +111,7 @@ public:
 	BOOL weapon;
 	BOOL armor;
 	CComboBox selectEquipControl;
+	afx_msg void OnCbnSelchangeSelectEquip();
+	CEdit reinforcementLogControl;
+	CString reinforcementLog;
 };
