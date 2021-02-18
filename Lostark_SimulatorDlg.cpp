@@ -63,9 +63,14 @@ CLostarkSimulatorDlg::CLostarkSimulatorDlg(CWnd* pParent /*=nullptr*/)
 	, additional2Value(0)
 	, additional3Value(0)
 	, additionalMax(FALSE)
-	, additional1String(_T(""))
-	, additional2String(_T(""))
-	, additional3String(_T(""))
+	, additional1String(_T("0/0"))
+	, additional2String(_T("0/0"))
+	, additional3String(_T("0/0"))
+	, currentProbability(_T("100%"))
+	, currentComulative(_T("100%"))
+	, stone1Price(0)
+	, stone2Price(0)
+	, orehaPrice(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -90,6 +95,11 @@ void CLostarkSimulatorDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_ADDITIONAL1_STRING, additional1String);
 	DDX_Text(pDX, IDC_ADDITIONAL2_STRING, additional2String);
 	DDX_Text(pDX, IDC_ADDITIONAL3_STRING, additional3String);
+	DDX_Text(pDX, IDC_CURRENT_PROBABILITY, currentProbability);
+	DDX_Text(pDX, IDC_CURRENT_COMULATIVE, currentComulative);
+	DDX_Text(pDX, IDC_STONE1, stone1Price);
+	DDX_Text(pDX, IDC_STONE2, stone2Price);
+	DDX_Text(pDX, IDC_OREHA_PRICE, orehaPrice);
 }
 
 BEGIN_MESSAGE_MAP(CLostarkSimulatorDlg, CDialogEx)
@@ -196,7 +206,7 @@ void CLostarkSimulatorDlg::OnNMCustomdrawAdditional1Slider(NMHDR* pNMHDR, LRESUL
 	UpdateData(TRUE);
 	char msg[100];
 	sprintf(msg, "%d", additional1Value);
-	additional1String = msg;
+	//additional1String = msg;
 	UpdateData(FALSE);
 }
 
