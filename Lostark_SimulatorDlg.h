@@ -114,4 +114,7 @@ public:
 	afx_msg void OnCbnSelchangeSelectEquip();
 	CEdit reinforcementLogControl;
 	CString reinforcementLog;
+	BOOL printFailLog;
+	BOOL setAdditional4;
+	CButton setAdditional4Control;
 };

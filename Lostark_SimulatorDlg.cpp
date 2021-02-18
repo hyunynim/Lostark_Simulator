@@ -87,6 +87,8 @@ CLostarkSimulatorDlg::CLostarkSimulatorDlg(CWnd* pParent /*=nullptr*/)
 	, meetMrJang(0)
 	, fragmentPrice(0)
 	, reinforcementLog(_T(""))
+	, printFailLog(FALSE)
+	, setAdditional4(FALSE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -125,6 +127,9 @@ void CLostarkSimulatorDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SELECT_EQUIP, selectEquipControl);
 	DDX_Control(pDX, IDC_REINFORCEMENT_LOG, reinforcementLogControl);
 	DDX_Text(pDX, IDC_REINFORCEMENT_LOG, reinforcementLog);
+	DDX_Check(pDX, IDC_PRINT_FAIL_LOG, printFailLog);
+	DDX_Check(pDX, IDC_SET_ADDITIONAL4, setAdditional4);
+	DDX_Control(pDX, IDC_SET_ADDITIONAL4, setAdditional4Control);
 }
 
 BEGIN_MESSAGE_MAP(CLostarkSimulatorDlg, CDialogEx)
@@ -271,6 +276,8 @@ void CLostarkSimulatorDlg::Initialize() {
 	additional3String = "0/0";
 	reinforcementLog = "";
 	UpdateData(FALSE);
+
+	setAdditional4Control.EnableWindow(1);
 }
 
 void CLostarkSimulatorDlg::OnBnClickedReinforce()
@@ -283,10 +290,18 @@ void CLostarkSimulatorDlg::OnBnClickedReinforce()
 			MessageBox("최고 수치 도달");
 			return;
 		}
-		if (curSel == 0)
+
+		if (curSel == 0) {
 			comulativeGold += weaponReinforcePrice[currentLevel] + (weaponNum[currentLevel] * weaponPrice) / 10 + (weaponStoneNum[currentLevel] * stone2Price) + (weaponOrehaNum[currentLevel] * orehaPrice) + (weaponFragment[currentLevel] * fragmentPrice) / 50;
-		else
+			if (setAdditional4)
+				comulativeGold += weaponAdditionalPrice;
+		}
+		else {
 			comulativeGold += armorReinforcePrice[currentLevel] + (armorNum[currentLevel] * armorPrice) / 10 + (armorStoneNum[currentLevel] * stone2Price) + (armorOrehaNum[currentLevel] * orehaPrice) + (armorFragment[currentLevel] * fragmentPrice) / 50;
+			if (setAdditional4)
+				comulativeGold += armorAdditionalPrice;
+		}
+
 		++comulativeCount;
 		++currentCount;
 		ll cur = probability[currentLevel];
@@ -305,17 +320,20 @@ void CLostarkSimulatorDlg::OnBnClickedReinforce()
 			else
 				curProb = 0;
 			currentCount = 0;
+			setAdditional4Control.EnableWindow(0);
+			setAdditional4 = FALSE;
 		}
 		else {
-			sprintf(msg, "%s +%d강화 실패\r\n", curSel < 1 ? "무기" : "방어구", currentLevel, currentCount);
-			reinforcementLog += msg;
+			if (!printFailLog) {
+				sprintf(msg, "%s +%d강화 실패\r\n", curSel < 1 ? "무기" : "방어구", currentLevel, currentCount);
+				reinforcementLog += msg;
+			}
 			curCom = min({ 10000LL, curCom + (ll)(curProb * 0.465) });
 			curProb = min({ curProb + cur / 10, cur * 2, 10000LL });
 			if (curCom == 10000)
 				++meetMrJang;
 		}
 		UpdateCurrentValue();
-		reinforcementLogControl.SetScrollPos(1, 1e9);
 		UpdateData(FALSE);
 	}
 	else {

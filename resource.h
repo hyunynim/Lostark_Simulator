@@ -40,6 +40,7 @@
 #define IDC_CURRENT_COUNT               1026
 #define IDC_MEET_MR_JANG                1027
 #define IDC_FRAGMENT_PRICE              1028
+#define IDC_PRINT_FAIL_LOG              1029
 #define IDC_SELECT_EQUIP                1030
 #define IDC_REINFORCEMENT_LOG           1031
 
