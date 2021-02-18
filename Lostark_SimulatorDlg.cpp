@@ -85,6 +85,7 @@ CLostarkSimulatorDlg::CLostarkSimulatorDlg(CWnd* pParent /*=nullptr*/)
 	, comulativeCount(0)
 	, currentCount(0)
 	, meetMrJang(0)
+	, fragmentPrice(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -119,6 +120,8 @@ void CLostarkSimulatorDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_COMULATIVE_COUNT, comulativeCount);
 	DDX_Text(pDX, IDC_CURRENT_COUNT, currentCount);
 	DDX_Text(pDX, IDC_MEET_MR_JANG, meetMrJang);
+	DDX_Text(pDX, IDC_FRAGMENT_PRICE, fragmentPrice);
+	DDX_Control(pDX, IDC_SELECT_EQUIP, selectEquipControl);
 }
 
 BEGIN_MESSAGE_MAP(CLostarkSimulatorDlg, CDialogEx)
@@ -163,7 +166,9 @@ BOOL CLostarkSimulatorDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	
+	selectEquipControl.InsertString(0, "선택 무기");
+	selectEquipControl.InsertString(1, "선택 방어구");
+	selectEquipControl.SetItemHeight(0, 10);
 	Initialize();
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
@@ -267,38 +272,47 @@ void CLostarkSimulatorDlg::OnBnClickedReinforce()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
-	if (currentLevel >= 25) {
-		MessageBox("최고 수치 도달");
-		return;
-	}
-	comulativeGold += weaponReinforcePrice[currentLevel] + (weaponNum[currentLevel] * weaponPrice) / 10 + (weaponStoneNum[currentLevel] * stone2Price) + (weaponOrehaNum[currentLevel] * orehaPrice);
-	++comulativeCount;
-	++currentCount;
-	ll cur = probability[currentLevel];
-
-	if (curCom >= 10000)
-		curProb = 10000;
-
-	ud d(0, 9999);
-	if (d(gen) < curProb) {
-		MessageBox("성공");
-		++currentLevel;
-		curCom = 0;
-		if (currentLevel < 25)
-			curProb = probability[currentLevel];
+	int curSel = selectEquipControl.GetCurSel();
+	if (~curSel) {
+		if (currentLevel >= 25) {
+			MessageBox("최고 수치 도달");
+			return;
+		}
+		if (curSel == 0)
+			comulativeGold += weaponReinforcePrice[currentLevel] + (weaponNum[currentLevel] * weaponPrice) / 10 + (weaponStoneNum[currentLevel] * stone2Price) + (weaponOrehaNum[currentLevel] * orehaPrice) + (weaponFragment[currentLevel] * fragmentPrice) / 50;
 		else
-			curProb = 0;
-		currentCount = 0;
+			comulativeGold += armorReinforcePrice[currentLevel] + (armorNum[currentLevel] * armorPrice) / 10 + (armorStoneNum[currentLevel] * stone2Price) + (armorOrehaNum[currentLevel] * orehaPrice) + (armorFragment[currentLevel] * fragmentPrice) / 50;
+		++comulativeCount;
+		++currentCount;
+		ll cur = probability[currentLevel];
+
+		if (curCom >= 10000)
+			curProb = 10000;
+
+		ud d(0, 9999);
+		if (d(gen) < curProb) {
+			MessageBox("성공");
+			++currentLevel;
+			curCom = 0;
+			if (currentLevel < 25)
+				curProb = probability[currentLevel];
+			else
+				curProb = 0;
+			currentCount = 0;
+		}
+		else {
+			MessageBox("실패");
+			curCom = min({ 10000LL, curCom + (ll)(curProb * 0.465) });
+			curProb = min({ curProb + cur / 10, cur * 2, 10000LL });
+			if (curCom == 10000)
+				++meetMrJang;
+		}
+		UpdateCurrentValue();
+		UpdateData(FALSE);
 	}
 	else {
-		MessageBox("실패");
-		curCom = min({ 10000LL, curCom + (ll)(curProb * 0.465) });
-		curProb = min({ curProb + cur / 10, cur * 2, 10000LL });
-		if (curCom == 10000)
-			++meetMrJang;
+		MessageBox("강화할 장비를 선택해주세요.");
 	}
-	UpdateCurrentValue();
-	UpdateData(FALSE);
 }
 
 void CLostarkSimulatorDlg::UpdateCurrentValue() {
