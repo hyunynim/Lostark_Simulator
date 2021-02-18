@@ -140,6 +140,7 @@ BEGIN_MESSAGE_MAP(CLostarkSimulatorDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_REINFORCE, &CLostarkSimulatorDlg::OnBnClickedReinforce)
 	ON_BN_CLICKED(IDC_INITIALIZING, &CLostarkSimulatorDlg::OnBnClickedInitializing)
 	ON_CBN_SELCHANGE(IDC_SELECT_EQUIP, &CLostarkSimulatorDlg::OnCbnSelchangeSelectEquip)
+	ON_BN_CLICKED(IDC_SET_ADDITIONAL4, &CLostarkSimulatorDlg::OnBnClickedSetAdditional4)
 END_MESSAGE_MAP()
 
 
@@ -275,9 +276,10 @@ void CLostarkSimulatorDlg::Initialize() {
 	additional2String = "0/0";
 	additional3String = "0/0";
 	reinforcementLog = "";
+	setAdditional4Control.EnableWindow(1);
+	setAdditional4 = FALSE;
 	UpdateData(FALSE);
 
-	setAdditional4Control.EnableWindow(1);
 }
 
 void CLostarkSimulatorDlg::OnBnClickedReinforce()
@@ -310,17 +312,18 @@ void CLostarkSimulatorDlg::OnBnClickedReinforce()
 			curProb = 10000;
 
 		ud d(0, 9999);
-		if (d(gen) < curProb) {
+		if (d(gen) < curProb + (setAdditional4 ? 1000 : 0)) {
 			sprintf(msg, "%s +%d강화 성공(%d회)\r\n", curSel < 1 ? "무기" : "방어구", currentLevel, currentCount);
 			reinforcementLog += msg;
 			++currentLevel;
 			curCom = 0;
+			if (currentLevel > 15)
+				setAdditional4Control.EnableWindow(0);
 			if (currentLevel < 25)
 				curProb = probability[currentLevel];
 			else
 				curProb = 0;
 			currentCount = 0;
-			setAdditional4Control.EnableWindow(0);
 			setAdditional4 = FALSE;
 		}
 		else {
@@ -334,11 +337,11 @@ void CLostarkSimulatorDlg::OnBnClickedReinforce()
 				++meetMrJang;
 		}
 		UpdateCurrentValue();
-		UpdateData(FALSE);
 	}
 	else {
 		MessageBox("강화할 장비를 선택해주세요.");
 	}
+	UpdateData(FALSE);
 }
 
 void CLostarkSimulatorDlg::UpdateCurrentValue() {
@@ -360,4 +363,20 @@ void CLostarkSimulatorDlg::OnCbnSelchangeSelectEquip()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	Initialize();
+}
+
+
+void CLostarkSimulatorDlg::OnBnClickedSetAdditional4()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (setAdditional4) {
+		setAdditional4 = 0;
+		curProb = max(curProb - 1000, 0LL);
+	}
+	else {
+		setAdditional4 = 1;
+		curProb = min(curProb + 1000, 10000LL);
+	}
+	UpdateCurrentValue();
+	UpdateData(FALSE);
 }

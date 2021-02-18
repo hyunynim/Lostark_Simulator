@@ -117,4 +117,5 @@ public:
 	BOOL printFailLog;
 	BOOL setAdditional4;
 	CButton setAdditional4Control;
+	afx_msg void OnBnClickedSetAdditional4();
 };
