@@ -3,7 +3,6 @@
 //
 
 #pragma once
-typedef long long ll;
 
 // CLostarkSimulatorDlg 대화 상자
 class CLostarkSimulatorDlg : public CDialogEx
@@ -33,7 +32,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 	void Initialize();
 public:
-	afx_msg void OnEnChangeEdit5();
+	void UpdateCurrentValue();
+	char msg[1010];
 	// 수호석 결정 가격
 	ll armorPrice;
 	// 파괴석 결정 가격
@@ -72,19 +72,19 @@ public:
 	BOOL additionalMax;
 	afx_msg void OnNMCustomdrawAdditional1Slider(NMHDR* pNMHDR, LRESULT* pResult);
 	//강화 확률
-	vector<ll> probability = { 10000, 10000, 10000, 10000, 10000, 10000, 10000, 6000, 4500, 3000, 3000, 3000, 1500, 1500, 1500, 1000, 1000, 1000, 500, 500, 300, 300, 100, 100, 50, 50 };
+	vector<ll> probability = { 10000, 10000, 10000, 10000, 10000, 10000, 6000, 4500, 3000, 3000, 3000, 1500, 1500, 1500, 1000, 1000, 1000, 500, 500, 300, 300, 100, 100, 50, 50 };
 	
 	//무기 재료
-	vector<ll> weaponReinforcePrice = { 0, 0, 0, 0, 0, 0, 0, 640, 640, 640, 640, 660, 660, 660, 660, 660, 680, 680, 680, 710, 730, 750, 780, 810, 840, 870 };
-	vector<ll> armorReinforcePrice = { 0, 0, 0, 0, 0, 0, 0, 330, 330, 330, 330, 330, 330, 330, 330, 350, 350, 350, 350, 350, 350, 360, 380, 390, 400, 420 };
-	vector<ll> weaponNum = { 0, 0, 0, 0, 0, 0, 0, 672, 672, 672, 830, 830, 830, 986, 986, 986, 1144, 1144, 1144, 1300, 1300, 1300, 1458, 1458, 1458, 1614 };
-	vector<ll> weaponStoneNum = { 0, 0, 0, 0, 0, 0, 0, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 24, 28, 30, 32, 34, 38, 42, 44, 48 };
-	vector<ll> weaponOrehaNum = { 0, 0, 0, 0, 0, 0, 0, 6, 6, 8, 8, 8, 8, 10, 10, 10, 12, 14, 16, 18, 20, 22, 26, 28, 32, 36 };
+	vector<ll> weaponReinforcePrice = { 0, 0, 0, 0, 0, 0, 640, 640, 640, 640, 660, 660, 660, 660, 660, 680, 680, 680, 710, 730, 750, 780, 810, 840, 870 };
+	vector<ll> armorReinforcePrice = { 0, 0, 0, 0, 0, 0, 330, 330, 330, 330, 330, 330, 330, 330, 350, 350, 350, 350, 350, 350, 360, 380, 390, 400, 420 };
+	vector<ll> weaponNum = { 0, 0, 0, 0, 0, 0, 672, 672, 672, 830, 830, 830, 986, 986, 986, 1144, 1144, 1144, 1300, 1300, 1300, 1458, 1458, 1458, 1614 };
+	vector<ll> weaponStoneNum = { 0, 0, 0, 0, 0, 0, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 24, 28, 30, 32, 34, 38, 42, 44, 48 };
+	vector<ll> weaponOrehaNum = { 0, 0, 0, 0, 0, 0, 6, 6, 8, 8, 8, 8, 10, 10, 10, 12, 14, 16, 18, 20, 22, 26, 28, 32, 36 };
 	
 	//방어구 재료
-	vector<ll> armorNum = { 0, 0, 0, 0, 0, 0, 0, 404, 404, 404, 498, 498, 498, 592, 592, 592, 686, 686, 686, 780, 780, 780, 874, 874, 874, 968 };
-	vector<ll> armorStoneNum = { 0, 0, 0, 0, 0, 0, 0, 8, 10, 10, 10, 10, 12, 12, 12, 12, 14, 16, 16, 18, 20, 22, 24, 26, 28, 30 };
-	vector<ll> armorOrehaNum = { 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 8, 8, 8, 8, 8, 8, 10, 10, 12, 14, 14, 16, 18, 20, 22, 24 };
+	vector<ll> armorNum = { 0, 0, 0, 0, 0, 0, 404, 404, 404, 498, 498, 498, 592, 592, 592, 686, 686, 686, 780, 780, 780, 874, 874, 874, 968 };
+	vector<ll> armorStoneNum = { 0, 0, 0, 0, 0, 0, 8, 10, 10, 10, 10, 12, 12, 12, 12, 14, 16, 16, 18, 20, 22, 24, 26, 28, 30 };
+	vector<ll> armorOrehaNum = { 0, 0, 0, 0, 0, 0, 6, 6, 6, 8, 8, 8, 8, 8, 8, 10, 10, 12, 14, 14, 16, 18, 20, 22, 24 };
 
 	//현재 강화 확률 출력값
 	CString currentProbability;
@@ -92,7 +92,15 @@ public:
 
 	//장인의 기운 출력값
 	CString currentComulative;
-	ll curCom;	//현재 장인의 기운
+	ll curCom = 0;	//현재 장인의 기운
+
 	afx_msg void OnBnClickedReinforce();
 	
+	int currentLevel;
+	// 누적 소모 골드
+	ll comulativeGold;
+	ll comulativeCount;
+	ll currentCount;
+	ll meetMrJang;
+	afx_msg void OnBnClickedInitializing();
 };

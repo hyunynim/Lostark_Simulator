@@ -43,3 +43,6 @@
 *.log
 *.recipe
 *.ilk
+*.zip
+*.iobj
+*.ipdb

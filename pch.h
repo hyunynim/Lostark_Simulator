@@ -10,5 +10,11 @@
 // 여기에 미리 컴파일하려는 헤더 추가
 #include "framework.h"
 #include<bits/stdc++.h>
+#include<random>
 #endif //PCH_H
 using namespace std;
+
+typedef long long ll;
+
+extern random_device rd;
+extern mt19937 gen;

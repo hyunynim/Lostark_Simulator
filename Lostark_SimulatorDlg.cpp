@@ -7,11 +7,20 @@
 #include "Lostark_Simulator.h"
 #include "Lostark_SimulatorDlg.h"
 #include "afxdialogex.h"
+#ifdef min
+#undef min
+#endif
+#ifdef max
+#undef max
+#endif
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
+random_device rd;
+mt19937 gen(rd());
+typedef uniform_int_distribution<ll> ud;
 
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
@@ -71,6 +80,11 @@ CLostarkSimulatorDlg::CLostarkSimulatorDlg(CWnd* pParent /*=nullptr*/)
 	, stone1Price(0)
 	, stone2Price(0)
 	, orehaPrice(0)
+	, currentLevel(6)
+	, comulativeGold(0)
+	, comulativeCount(0)
+	, currentCount(0)
+	, meetMrJang(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -100,6 +114,11 @@ void CLostarkSimulatorDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_STONE1, stone1Price);
 	DDX_Text(pDX, IDC_STONE2, stone2Price);
 	DDX_Text(pDX, IDC_OREHA_PRICE, orehaPrice);
+	DDX_Text(pDX, IDC_CURRENT_LEVEL, currentLevel);
+	DDX_Text(pDX, IDC_COMULATIVE_GOLD, comulativeGold);
+	DDX_Text(pDX, IDC_COMULATIVE_COUNT, comulativeCount);
+	DDX_Text(pDX, IDC_CURRENT_COUNT, currentCount);
+	DDX_Text(pDX, IDC_MEET_MR_JANG, meetMrJang);
 }
 
 BEGIN_MESSAGE_MAP(CLostarkSimulatorDlg, CDialogEx)
@@ -107,6 +126,8 @@ BEGIN_MESSAGE_MAP(CLostarkSimulatorDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_NOTIFY(NM_CUSTOMDRAW, IDC_ADDITIONAL1_SLIDER, &CLostarkSimulatorDlg::OnNMCustomdrawAdditional1Slider)
+	ON_BN_CLICKED(IDC_REINFORCE, &CLostarkSimulatorDlg::OnBnClickedReinforce)
+	ON_BN_CLICKED(IDC_INITIALIZING, &CLostarkSimulatorDlg::OnBnClickedInitializing)
 END_MESSAGE_MAP()
 
 
@@ -204,7 +225,6 @@ void CLostarkSimulatorDlg::OnNMCustomdrawAdditional1Slider(NMHDR* pNMHDR, LRESUL
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	*pResult = 0;
 	UpdateData(TRUE);
-	char msg[100];
 	sprintf(msg, "%d", additional1Value);
 	//additional1String = msg;
 	UpdateData(FALSE);
@@ -214,4 +234,83 @@ void CLostarkSimulatorDlg::Initialize() {
 	additional1Slider.SetRangeMax(48);
 	additional2Slider.SetRangeMax(24);
 	additional3Slider.SetRangeMax(6);
+
+
+	comulativeGold = 0;
+	comulativeCount = 0;
+	currentCount = 0;
+	currentLevel = 6;
+
+	curProb = probability[currentLevel];
+	curCom = 0;
+
+	meetMrJang = 0;
+
+	additional1Value = 0;
+	additional2Value = 0;
+	additional3Value = 0;
+
+
+	sprintf(msg, "%lld.%lld%%%", curProb / 100, curProb % 100);
+	currentProbability = msg;
+
+	sprintf(msg, "%lld.%lld%%%", curCom / 100, curCom % 100);
+	currentComulative = msg;
+
+	additional1String = "0/0";
+	additional2String = "0/0";
+	additional3String = "0/0";
+	UpdateData(FALSE);
+}
+
+void CLostarkSimulatorDlg::OnBnClickedReinforce()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+	if (currentLevel >= 25) {
+		MessageBox("최고 수치 도달");
+		return;
+	}
+	comulativeGold += weaponReinforcePrice[currentLevel] + (weaponNum[currentLevel] * weaponPrice) / 10 + (weaponStoneNum[currentLevel] * stone2Price) + (weaponOrehaNum[currentLevel] * orehaPrice);
+	++comulativeCount;
+	++currentCount;
+	ll cur = probability[currentLevel];
+
+	if (curCom >= 10000)
+		curProb = 10000;
+
+	ud d(0, 9999);
+	if (d(gen) < curProb) {
+		MessageBox("성공");
+		++currentLevel;
+		curCom = 0;
+		if (currentLevel < 25)
+			curProb = probability[currentLevel];
+		else
+			curProb = 0;
+		currentCount = 0;
+	}
+	else {
+		MessageBox("실패");
+		curCom = min({ 10000LL, curCom + (ll)(curProb * 0.465) });
+		curProb = min({ curProb + cur / 10, cur * 2, 10000LL });
+		if (curCom == 10000)
+			++meetMrJang;
+	}
+	UpdateCurrentValue();
+	UpdateData(FALSE);
+}
+
+void CLostarkSimulatorDlg::UpdateCurrentValue() {
+	sprintf(msg, "%lld.%lld%%", curCom / 100, curCom % 100);
+	currentComulative = msg;
+	sprintf(msg, "%lld.%lld%%", curProb / 100, curProb % 100);
+	currentProbability = msg;
+}
+
+
+void CLostarkSimulatorDlg::OnBnClickedInitializing()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	Initialize();
 }
