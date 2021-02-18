@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29201.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lostark_Simulator", "Lostark_Simulator.vcxproj", "{723237D3-8CE2-40B8-9ACB-E969756356D2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{723237D3-8CE2-40B8-9ACB-E969756356D2}.Debug|x64.ActiveCfg = Debug|x64
+		{723237D3-8CE2-40B8-9ACB-E969756356D2}.Debug|x64.Build.0 = Debug|x64
+		{723237D3-8CE2-40B8-9ACB-E969756356D2}.Debug|x86.ActiveCfg = Debug|Win32
+		{723237D3-8CE2-40B8-9ACB-E969756356D2}.Debug|x86.Build.0 = Debug|Win32
+		{723237D3-8CE2-40B8-9ACB-E969756356D2}.Release|x64.ActiveCfg = Release|x64
+		{723237D3-8CE2-40B8-9ACB-E969756356D2}.Release|x64.Build.0 = Release|x64
+		{723237D3-8CE2-40B8-9ACB-E969756356D2}.Release|x86.ActiveCfg = Release|Win32
+		{723237D3-8CE2-40B8-9ACB-E969756356D2}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {40DCBF59-DBB3-4018-A3C8-1C9285D5A12F}
+	EndGlobalSection
+EndGlobal
