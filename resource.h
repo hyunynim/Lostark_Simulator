@@ -37,7 +37,6 @@
 #define IDC_COMULATIVE_GOLD             1023
 #define IDC_COMULATIVE_COUNT            1024
 #define IDC_SET_ADDITIONAL4             1025
-#define IDC_SET_ADDITIONAL_MAX2         1025
 #define IDC_CURRENT_COUNT               1026
 #define IDC_MEET_MR_JANG                1027
 
