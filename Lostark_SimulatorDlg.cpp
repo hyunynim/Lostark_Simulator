@@ -246,6 +246,7 @@ void CLostarkSimulatorDlg::OnNMCustomdrawAdditional1Slider(NMHDR* pNMHDR, LRESUL
 }
 
 void CLostarkSimulatorDlg::Initialize() {
+	UpdateData(TRUE);
 	additional1Slider.SetRangeMax(48);
 	additional2Slider.SetRangeMax(24);
 	additional3Slider.SetRangeMax(6);
@@ -313,7 +314,7 @@ void CLostarkSimulatorDlg::OnBnClickedReinforce()
 
 		ud d(0, 9999);
 		if (d(gen) < curProb + (setAdditional4 ? 1000 : 0)) {
-			sprintf(msg, "%s +%d강화 성공(%d회)\r\n", curSel < 1 ? "무기" : "방어구", currentLevel, currentCount);
+			sprintf(msg, "(%d회) %s +%d강화 성공(%d회)\r\n", comulativeCount, curSel < 1 ? "무기" : "방어구", currentLevel, currentCount);
 			reinforcementLog += msg;
 			++currentLevel;
 			curCom = 0;
@@ -328,7 +329,7 @@ void CLostarkSimulatorDlg::OnBnClickedReinforce()
 		}
 		else {
 			if (!printFailLog) {
-				sprintf(msg, "%s +%d강화 실패\r\n", curSel < 1 ? "무기" : "방어구", currentLevel, currentCount);
+				sprintf(msg, "(%d회) %s +%d강화 실패\r\n", comulativeCount, curSel < 1 ? "무기" : "방어구", currentLevel, currentCount);
 				reinforcementLog += msg;
 			}
 			curCom = min({ 10000LL, curCom + (ll)(curProb * 0.465) });
@@ -342,6 +343,7 @@ void CLostarkSimulatorDlg::OnBnClickedReinforce()
 		MessageBox("강화할 장비를 선택해주세요.");
 	}
 	UpdateData(FALSE);
+	reinforcementLogControl.LineScroll(reinforcementLogControl.GetLineCount());
 }
 
 void CLostarkSimulatorDlg::UpdateCurrentValue() {
