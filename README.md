@@ -3,6 +3,8 @@
  - Now it can use all of additional option
    - However, when the probability reaches its maximum, the limit of the additional options remains unchanged.
  - Add price information
+ - Add ability stone simulator
+ 
 # 20210220
  - Change font
  - Modify bug (The probability is lower with additional options)
