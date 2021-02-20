@@ -178,7 +178,9 @@ BOOL CLostarkSimulatorDlg::OnInitDialog()
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	selectEquipControl.InsertString(0, "선택 무기");
 	selectEquipControl.InsertString(1, "선택 방어구");
-	selectEquipControl.SetItemHeight(0, 10);
+	selectEquipControl.SetItemHeight(0, 15);
+	selectEquipControl.SetItemHeight(1, 15);
+	
 	Initialize();
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
@@ -314,7 +316,7 @@ void CLostarkSimulatorDlg::OnBnClickedReinforce()
 
 		ud d(0, 9999);
 		if (d(gen) < curProb + (setAdditional4 ? 1000 : 0)) {
-			sprintf(msg, "(%d회) %s +%d강화 성공(%d회)\r\n", comulativeCount, curSel < 1 ? "무기" : "방어구", currentLevel, currentCount);
+			sprintf(msg, "(%d회) %s +%d강화 성공(%d회)\r\n", comulativeCount, curSel < 1 ? "무기" : "방어구", currentLevel + 1, currentCount);
 			reinforcementLog += msg;
 			++currentLevel;
 			curCom = 0;
@@ -329,7 +331,7 @@ void CLostarkSimulatorDlg::OnBnClickedReinforce()
 		}
 		else {
 			if (!printFailLog) {
-				sprintf(msg, "(%d회) %s +%d강화 실패\r\n", comulativeCount, curSel < 1 ? "무기" : "방어구", currentLevel, currentCount);
+				sprintf(msg, "(%d회) %s +%d강화 실패\r\n", comulativeCount, curSel < 1 ? "무기" : "방어구", currentLevel + 1, currentCount);
 				reinforcementLog += msg;
 			}
 			curCom = min({ 10000LL, curCom + (ll)(curProb * 0.465) });
@@ -371,7 +373,7 @@ void CLostarkSimulatorDlg::OnCbnSelchangeSelectEquip()
 void CLostarkSimulatorDlg::OnBnClickedSetAdditional4()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	if (setAdditional4) {
+	if (setAdditional4) { 
 		setAdditional4 = 0;
 		curProb = max(curProb - 1000, 0LL);
 	}
