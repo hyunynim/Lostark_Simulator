@@ -130,4 +130,13 @@ public:
 	void UpdateSliderString();
 	void UpdateProbability();
 	ll GetCurrentProbability();
+	afx_msg void OnBnClickedSetAdditionalMax();
+	ll additiona1PricePer1Percent;
+	ll additiona2PricePer1Percent;
+	ll additiona3PricePer1Percent;
+
+	ll reinforcePrice;
+	ll GetReinforcePrice();
+	afx_msg void OnEnChangeArmorPrice();
+	afx_msg void OnBnClickedApplyPrice();
 };

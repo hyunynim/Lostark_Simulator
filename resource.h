@@ -53,9 +53,15 @@
 #define IDC_REINFORCEMENT_LOG           1031
 #define IDC_CHANGE_CURRENT_LEVEL        1032
 #define IDC_TAB_CONTROL                 1033
+#define IDC_ADDITIONAL1_PRICE_PER_1PERCENT 1033
+#define IDC_ADDITIONAL2_PRICE_PER_1PERCENT 1034
 #define IDC_APPLY_ACTIVITY              1035
+#define IDC_ADDITIONAL3_PRICE_PER_1PERCENT 1035
 #define IDC_INITIALIZE                  1036
+#define IDC_REINFORCE_PRICE             1036
 #define IDC_OPTION1_ACTIVITY            1037
+#define IDC_REINFORCE4                  1037
+#define IDC_APPLY_PRICE                 1037
 #define IDC_OPTION1_REMAIN              1038
 #define IDC_OPTION2_ACTIVITY            1039
 #define IDC_OPTION2_REMAIN              1040

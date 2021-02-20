@@ -46,4 +46,6 @@ public:
 	CString stoneLog;
 	CEdit stoneLogControl;
 	afx_msg void OnBnClickedInitialize();
+
+	ll currentGold;
 };

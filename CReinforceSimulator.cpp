@@ -46,6 +46,10 @@ CReinforceSimulator::CReinforceSimulator(CWnd* pParent /*=nullptr*/)
 	, reinforcementLog(_T(""))
 	, printFailLog(FALSE)
 	, setAdditional4(FALSE)
+	, additiona1PricePer1Percent(0)
+	, additiona2PricePer1Percent(0)
+	, additiona3PricePer1Percent(0)
+	, reinforcePrice(0)
 {
 
 }
@@ -92,6 +96,10 @@ void CReinforceSimulator::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_SET_ADDITIONAL4, setAdditional4);
 	DDX_Control(pDX, IDC_SET_ADDITIONAL4, setAdditional4Control);
 	DDX_Control(pDX, IDC_CURRENT_LEVEL, currentLevelControl);
+	DDX_Text(pDX, IDC_ADDITIONAL1_PRICE_PER_1PERCENT, additiona1PricePer1Percent);
+	DDX_Text(pDX, IDC_ADDITIONAL2_PRICE_PER_1PERCENT, additiona2PricePer1Percent);
+	DDX_Text(pDX, IDC_ADDITIONAL3_PRICE_PER_1PERCENT, additiona3PricePer1Percent);
+	DDX_Text(pDX, IDC_REINFORCE_PRICE, reinforcePrice);
 }
 
 
@@ -104,6 +112,9 @@ BEGIN_MESSAGE_MAP(CReinforceSimulator, CDialogEx)
 	ON_NOTIFY(NM_CUSTOMDRAW, IDC_ADDITIONAL1_SLIDER, &CReinforceSimulator::OnNMCustomdrawAdditional1Slider)
 	ON_NOTIFY(NM_CUSTOMDRAW, IDC_ADDITIONAL2_SLIDER, &CReinforceSimulator::OnNMCustomdrawAdditional2Slider)
 	ON_NOTIFY(NM_CUSTOMDRAW, IDC_ADDITIONAL3_SLIDER, &CReinforceSimulator::OnNMCustomdrawAdditional3Slider)
+	ON_BN_CLICKED(IDC_SET_ADDITIONAL_MAX, &CReinforceSimulator::OnBnClickedSetAdditionalMax)
+	ON_EN_CHANGE(IDC_ARMOR_PRICE, &CReinforceSimulator::OnEnChangeArmorPrice)
+	ON_BN_CLICKED(IDC_APPLY_PRICE, &CReinforceSimulator::OnBnClickedApplyPrice)
 END_MESSAGE_MAP()
 
 
@@ -130,6 +141,8 @@ BOOL CReinforceSimulator::OnInitDialog()
 }
 void CReinforceSimulator::Initialize(int lvl) {
 	Initialize();
+	additionalMax = 0;
+
 	currentLevel = lvl;
 	curProb = probability[currentLevel];
 
@@ -188,18 +201,7 @@ void CReinforceSimulator::OnBnClickedReinforce()
 			return;
 		}
 
-		if (curSel == 0) {
-			comulativeGold += weaponReinforcePrice[currentLevel] + (weaponNum[currentLevel] * weaponPrice) / 10 + (weaponStoneNum[currentLevel] * stone2Price) + (weaponOrehaNum[currentLevel] * orehaPrice) + (weaponFragment[currentLevel] * fragmentPrice) / 50;
-			if (setAdditional4)
-				comulativeGold += weaponAdditionalPrice;
-		}
-		else {
-			comulativeGold += armorReinforcePrice[currentLevel] + (armorNum[currentLevel] * armorPrice) / 10 + (armorStoneNum[currentLevel] * stone2Price) + (armorOrehaNum[currentLevel] * orehaPrice) + (armorFragment[currentLevel] * fragmentPrice) / 50;
-			if (setAdditional4)
-				comulativeGold += armorAdditionalPrice;
-		}
-		comulativeGold += additional1Price * additional1Value + additional2Price * additional2Value + additional3Price * additional3Value;
-
+		comulativeGold += GetReinforcePrice();
 
 		++comulativeCount;
 		++currentCount;
@@ -235,11 +237,21 @@ void CReinforceSimulator::OnBnClickedReinforce()
 			}
 			curCom = min({ 10000LL, curCom + (ll)(GetCurrentProbability() * 0.465) });
 			curProb = min({ curProb + cur / 10, cur * 2, 10000LL });
-			if (curCom >= 10000)
+			if (curCom >= 10000) {
 				++meetMrJang;
+			}
 
 			UpdateData(FALSE);
+			if (curCom >= 10000) {
+				additional1Value = 0;
+				additional1Slider.SetPos(0);
 
+				additional2Value = 0;
+				additional2Slider.SetPos(0);
+
+				additional3Value = 0;
+				additional3Slider.SetPos(0);
+			}
 			if (!additionalMax)
 				UpdateSlider();
 		}
@@ -285,6 +297,7 @@ void CReinforceSimulator::OnBnClickedSetAdditional4()
 		setAdditional4 = 1;
 		curProb = min(curProb + 1000, 10000LL);
 	}
+	reinforcePrice = GetReinforcePrice();
 	UpdateCurrentValue();
 	UpdateData(FALSE);
 }
@@ -313,6 +326,7 @@ void CReinforceSimulator::OnNMCustomdrawAdditional1Slider(NMHDR* pNMHDR, LRESULT
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
 	UpdateSliderString();
+	reinforcePrice = GetReinforcePrice();
 	*pResult = 0;
 	UpdateData(FALSE);
 }
@@ -323,6 +337,7 @@ void CReinforceSimulator::OnNMCustomdrawAdditional2Slider(NMHDR* pNMHDR, LRESULT
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
 	UpdateSliderString();
+	reinforcePrice = GetReinforcePrice();
 	*pResult = 0;
 	UpdateData(FALSE);
 }
@@ -333,6 +348,7 @@ void CReinforceSimulator::OnNMCustomdrawAdditional3Slider(NMHDR* pNMHDR, LRESULT
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
 	UpdateSliderString();
+	reinforcePrice = GetReinforcePrice();
 	*pResult = 0;
 	UpdateData(FALSE);
 }
@@ -360,6 +376,10 @@ void CReinforceSimulator::UpdateSliderString() {
 	sprintf(msg, "%d/%d", additional3Value, additionalLimit[currentLevel] / 6);
 	additional3String = msg;
 
+	additiona1PricePer1Percent = (ll)((double)100 / additional1Probability[currentLevel] * additional1Price);
+	additiona2PricePer1Percent = (ll)((double)100 / additional2Probability[currentLevel] * additional2Price);
+	additiona3PricePer1Percent = (ll)((double)100 / additional3Probability[currentLevel] * additional3Price);
+
 	additionalProb = additional1Value * additional1Probability[currentLevel]
 		+ additional2Value * additional2Probability[currentLevel]
 		+ additional3Value * additional3Probability[currentLevel];
@@ -385,4 +405,67 @@ ll CReinforceSimulator::GetCurrentProbability() {
 		res = 10000;
 
 	return res;
+}
+
+void CReinforceSimulator::OnBnClickedSetAdditionalMax()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (additionalMax) {
+		additionalMax = 0;
+	}
+	else {
+		additionalMax = 1;
+		additional1Value = additional1Slider.GetRangeMax();
+		additional1Slider.SetPos(additional1Slider.GetRangeMax());
+
+		additional2Value = additional2Slider.GetRangeMax();
+		additional2Slider.SetPos(additional2Slider.GetRangeMax());
+
+		additional3Value = additional3Slider.GetRangeMax();
+		additional3Slider.SetPos(additional3Slider.GetRangeMax());
+	}
+	UpdateSliderString();
+	UpdateData(FALSE);
+}
+
+ll CReinforceSimulator::GetReinforcePrice() {
+	int curSel = selectEquipControl.GetCurSel();
+	ll res = 0;
+	if (curSel == 0) {
+		res += weaponReinforcePrice[currentLevel] + (weaponNum[currentLevel] * weaponPrice) / 10 + (weaponStoneNum[currentLevel] * stone2Price) + (weaponOrehaNum[currentLevel] * orehaPrice) + (weaponFragment[currentLevel] * fragmentPrice) / 50;
+		if (setAdditional4)
+			res += weaponAdditionalPrice;
+	}
+	else {
+		res += armorReinforcePrice[currentLevel] + (armorNum[currentLevel] * armorPrice) / 10 + (armorStoneNum[currentLevel] * stone2Price) + (armorOrehaNum[currentLevel] * orehaPrice) + (armorFragment[currentLevel] * fragmentPrice) / 50;
+		if (setAdditional4)
+			res += armorAdditionalPrice;
+	}
+	res += additional1Price * additional1Value + additional2Price * additional2Value + additional3Price * additional3Value;
+
+	return res;
+}
+
+void CReinforceSimulator::OnEnChangeArmorPrice()
+{
+	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
+	// CDialogEx::OnInitDialog() 함수를 재지정 
+	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
+	// 이 알림 메시지를 보내지 않습니다.
+
+	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CReinforceSimulator::OnBnClickedApplyPrice()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+	reinforcePrice = GetReinforcePrice();
+
+	additiona1PricePer1Percent = (ll)((double)100 / additional1Probability[currentLevel] * additional1Price);
+	additiona2PricePer1Percent = (ll)((double)100 / additional2Probability[currentLevel] * additional2Price);
+	additiona3PricePer1Percent = (ll)((double)100 / additional3Probability[currentLevel] * additional3Price);
+
+	UpdateData(FALSE);
 }

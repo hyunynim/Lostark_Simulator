@@ -117,6 +117,7 @@ BOOL CLostarkSimulatorDlg::OnInitDialog()
 
 	tabControl.InsertItem(0, "강화");
 	tabControl.InsertItem(1, "어빌리티 스톤");
+	tabControl.InsertItem(2, "각인");
 
 	CRect rect;
 	tabControl.GetWindowRect(rect);
