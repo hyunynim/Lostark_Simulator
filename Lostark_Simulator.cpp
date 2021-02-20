@@ -16,6 +16,7 @@
 
 BEGIN_MESSAGE_MAP(CLostarkSimulatorApp, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
+	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB_CONTROL, &CLostarkSimulatorApp::OnTcnSelchangeTabControl)
 END_MESSAGE_MAP()
 
 
@@ -105,3 +106,10 @@ BOOL CLostarkSimulatorApp::InitInstance()
 	return FALSE;
 }
 
+
+
+void CLostarkSimulatorApp::OnTcnSelchangeTabControl(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	*pResult = 0;
+}

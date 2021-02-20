@@ -188,6 +188,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CReinforceSimulator.h" />
+    <ClInclude Include="CStoneSimulator.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Lostark_Simulator.h" />
     <ClInclude Include="Lostark_SimulatorDlg.h" />
@@ -197,6 +198,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CReinforceSimulator.cpp" />
+    <ClCompile Include="CStoneSimulator.cpp" />
     <ClCompile Include="Lostark_Simulator.cpp" />
     <ClCompile Include="Lostark_SimulatorDlg.cpp" />
     <ClCompile Include="pch.cpp">

@@ -53,6 +53,10 @@ public:
 	int additional1Value;
 	int additional2Value;
 	int additional3Value;
+	vector<int> additionalLimit = { 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 12, 24, 24, 24, 24, 24, 24, 36, 36, 36, 36, 48, 48, 48, 48 };
+	vector<int> additional1Probability = { 0, 0, 0, 0, 0, 0, 167, 125, 84, 84, 84, 21, 21, 21, 14, 14, 14, 5, 5, 3, 3, 1, 1, 1, 1 };
+	vector<int> additional2Probability = { 0, 0, 0, 0, 0, 0, 333, 250, 167, 167, 167, 42, 42, 42, 28, 28, 28, 9, 9, 6, 6, 2, 2, 2, 2 };
+	vector<int> additional3Probability = {0, 0, 0, 0, 0, 0, 1000, 750, 500, 500, 500, 125, 125, 125, 83, 83, 83, 28, 28, 17, 17, 4, 4, 4, 4 };
 
 	//보조재료 출력값
 	CString additional1String;
@@ -60,7 +64,6 @@ public:
 	CString additional3String;
 
 	BOOL additionalMax;
-	afx_msg void OnNMCustomdrawAdditional1Slider(NMHDR* pNMHDR, LRESULT* pResult);
 	//강화 확률
 	vector<ll> probability = { 10000, 10000, 10000, 10000, 10000, 10000, 6000, 4500, 3000, 3000, 3000, 1500, 1500, 1500, 1000, 1000, 1000, 500, 500, 300, 300, 100, 100, 50, 50 };
 
@@ -116,4 +119,8 @@ public:
 	virtual BOOL OnInitDialog();
 	void Initialize(int lvl);
 	void Initialize();
+
+	afx_msg void OnNMCustomdrawAdditional1Slider(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnNMCustomdrawAdditional2Slider(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnNMCustomdrawAdditional3Slider(NMHDR* pNMHDR, LRESULT* pResult);
 };

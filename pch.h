@@ -13,6 +13,7 @@
 #include<random>
 #endif //PCH_H
 #include <afxcontrolbars.h>
+#include <afxcontrolbars.h>
 using namespace std;
 
 typedef long long ll;

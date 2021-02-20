@@ -27,6 +27,7 @@ public:
 // 구현입니다.
 
 	DECLARE_MESSAGE_MAP()
+	afx_msg void OnTcnSelchangeTabControl(NMHDR* pNMHDR, LRESULT* pResult);
 };
 
 extern CLostarkSimulatorApp theApp;

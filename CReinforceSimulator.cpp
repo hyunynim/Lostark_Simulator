@@ -101,6 +101,9 @@ BEGIN_MESSAGE_MAP(CReinforceSimulator, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_SELECT_EQUIP, &CReinforceSimulator::OnCbnSelchangeSelectEquip)
 	ON_BN_CLICKED(IDC_SET_ADDITIONAL4, &CReinforceSimulator::OnBnClickedSetAdditional4)
 	ON_BN_CLICKED(IDC_CHANGE_CURRENT_LEVEL, &CReinforceSimulator::OnBnClickedChangeCurrentLevel)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_ADDITIONAL1_SLIDER, &CReinforceSimulator::OnNMCustomdrawAdditional1Slider)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_ADDITIONAL2_SLIDER, &CReinforceSimulator::OnNMCustomdrawAdditional2Slider)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_ADDITIONAL3_SLIDER, &CReinforceSimulator::OnNMCustomdrawAdditional3Slider)
 END_MESSAGE_MAP()
 
 
@@ -198,7 +201,9 @@ void CReinforceSimulator::OnBnClickedReinforce()
 			if (setAdditional4)
 				comulativeGold += armorAdditionalPrice;
 		}
-
+		additional1Slider.SetRangeMax(additionalLimit[currentLevel]);
+		additional2Slider.SetRangeMax(additionalLimit[currentLevel] / 2);
+		additional3Slider.SetRangeMax(additionalLimit[currentLevel] / 6);
 		++comulativeCount;
 		++currentCount;
 		ll cur = probability[currentLevel];
@@ -292,4 +297,19 @@ void CReinforceSimulator::OnBnClickedChangeCurrentLevel()
 		currentLevelControl.SetReadOnly(FALSE);
 		currentLevelChange = 1;
 	}
+}
+
+
+void CReinforceSimulator::OnNMCustomdrawAdditional1Slider(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	*pResult = 0;
+}
+
+void CReinforceSimulator::OnNMCustomdrawAdditional2Slider(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	*pResult = 0;
 }

@@ -4,16 +4,16 @@
 
 #include "pch.h"
 #include "framework.h"
-#include "Lostark_Simulator.h"
-#include "Lostark_SimulatorDlg.h"
-#include "afxdialogex.h"
-#include"CReinforceSimulator.h"
 #ifdef min
 #undef min
 #endif
 #ifdef max
 #undef max
 #endif
+#include "Lostark_Simulator.h"
+#include "Lostark_SimulatorDlg.h"
+#include "afxdialogex.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -40,6 +40,8 @@ public:
 // 구현입니다.
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnTcnSelchangeTabControl(NMHDR* pNMHDR, LRESULT* pResult);
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -52,6 +54,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB_CONTROL, &CAboutDlg::OnTcnSelchangeTabControl)
 END_MESSAGE_MAP()
 
 
@@ -75,6 +78,7 @@ BEGIN_MESSAGE_MAP(CLostarkSimulatorDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB_CONTROL, &CLostarkSimulatorDlg::OnTcnSelchangeTabControl)
 END_MESSAGE_MAP()
 
 
@@ -112,15 +116,20 @@ BOOL CLostarkSimulatorDlg::OnInitDialog()
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 
 	tabControl.InsertItem(0, "강화");
+	tabControl.InsertItem(1, "어빌리티 스톤");
 
 	CRect rect;
 	tabControl.GetWindowRect(rect);
-	CReinforceSimulator* pDlg1;
 	pDlg1 = new CReinforceSimulator;
 	pDlg1->Create(IDD_REINFORCE_SIMULATOR, &tabControl);
 	pDlg1->MoveWindow(0, 20, rect.Width() - 5, rect.Height() - 5);
 	pDlg1->ShowWindow(SW_SHOW);
 
+	pDlg2 = new CStoneSimulator;
+	pDlg2->Create(IDD_STONE_SIMULATOR, &tabControl);
+	pDlg2->MoveWindow(0, 20, rect.Width() - 5, rect.Height() - 5);
+	pDlg2->ShowWindow(SW_HIDE);
+	
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -171,4 +180,28 @@ void CLostarkSimulatorDlg::OnPaint()
 HCURSOR CLostarkSimulatorDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+void CAboutDlg::OnTcnSelchangeTabControl(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	*pResult = 0;
+}
+
+
+void CLostarkSimulatorDlg::OnTcnSelchangeTabControl(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	*pResult = 0;
+	int idx = tabControl.GetCurSel();
+	switch (idx) {
+	case 0:
+		pDlg1->ShowWindow(SW_SHOW);
+		pDlg2->ShowWindow(SW_HIDE);
+		break;
+	case 1:
+		pDlg1->ShowWindow(SW_HIDE);
+		pDlg2->ShowWindow(SW_SHOW);
+		break;
+	}
 }

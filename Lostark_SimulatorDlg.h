@@ -1,7 +1,8 @@
 ﻿
 // Lostark_SimulatorDlg.h: 헤더 파일
 //
-
+#include"CStoneSimulator.h"
+#include"CReinforceSimulator.h"
 #pragma once
 
 // CLostarkSimulatorDlg 대화 상자
@@ -34,5 +35,9 @@ public:
 	BOOL currentLevelChange;
 	CTabCtrl tabControl;
 
+	CReinforceSimulator* pDlg1;
+	CStoneSimulator* pDlg2;
 
+
+	afx_msg void OnTcnSelchangeTabControl(NMHDR* pNMHDR, LRESULT* pResult);
 };

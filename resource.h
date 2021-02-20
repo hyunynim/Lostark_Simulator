@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ø°º≠ ª˝º∫«— ∆˜«‘ ∆ƒ¿œ¿‘¥œ¥Ÿ.
-// LostarkSimulator.rcø°º≠ ªÁøÎµ«∞Ì ¿÷Ω¿¥œ¥Ÿ.
+// Microsoft Visual C++ÏóêÏÑú ÏÉùÏÑ±Ìïú Ìè¨Ìï® ÌååÏùºÏûÖÎãàÎã§.
+// LostarkSimulator.rcÏóêÏÑú ÏÇ¨Ïö©ÎêòÍ≥† ÏûàÏäµÎãàÎã§.
 //
 #define IDM_ABOUTBOX                    0x0010
 #define IDD_ABOUTBOX                    100
@@ -13,7 +13,9 @@
 #define IDD_STONE_SIMULATOR             131
 #define IDC_EDIT1                       1000
 #define IDC_ARMOR_PRICE                 1000
+#define IDC_ACTIVITY                    1000
 #define IDC_WEAPON_PRICE                1001
+#define IDC_PROBABILITY                 1001
 #define IDC_ADDITIONAL1_PRICE           1002
 #define IDC_ADDITIONAL2_PRICE           1003
 #define IDC_ADDITIONAL3_PRICE           1004
@@ -29,8 +31,10 @@
 #define IDC_ADDITIONAL3_STRING          1014
 #define IDC_BUTTON2                     1015
 #define IDC_INITIALIZING                1015
+#define IDC_REINFORCE1                  1015
 #define IDC_REINFORCE2                  1016
 #define IDC_STONE1                      1017
+#define IDC_REINFORCE3                  1017
 #define IDC_STONE2                      1018
 #define IDC_CURRENT_PROBABILITY         1019
 #define IDC_CURRENT_COMULATIVE          1020
@@ -49,6 +53,15 @@
 #define IDC_REINFORCEMENT_LOG           1031
 #define IDC_CHANGE_CURRENT_LEVEL        1032
 #define IDC_TAB_CONTROL                 1033
+#define IDC_APPLY_ACTIVITY              1035
+#define IDC_INITIALIZE                  1036
+#define IDC_OPTION1_ACTIVITY            1037
+#define IDC_OPTION1_REMAIN              1038
+#define IDC_OPTION2_ACTIVITY            1039
+#define IDC_OPTION2_REMAIN              1040
+#define IDC_OPTION3_ACTIVITY            1041
+#define IDC_OPTION3_REMAIN              1042
+#define IDC_STONE_LOG                   1043
 
 // Next default values for new objects
 // 
@@ -56,7 +69,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1034
+#define _APS_NEXT_CONTROL_VALUE         1044
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
