@@ -6,7 +6,11 @@
 #define IDD_ABOUTBOX                    100
 #define IDS_ABOUTBOX                    101
 #define IDD_LOSTARK_SIMULATOR_DIALOG    102
+#define IDD_REINFORCE_SIMULATOR         103
 #define IDR_MAINFRAME                   128
+#define IDD_SEAL_SIMULATOR              130
+#define IDD_DIALOG2                     131
+#define IDD_STONE_SIMULATOR             131
 #define IDC_EDIT1                       1000
 #define IDC_ARMOR_PRICE                 1000
 #define IDC_WEAPON_PRICE                1001
@@ -43,14 +47,16 @@
 #define IDC_PRINT_FAIL_LOG              1029
 #define IDC_SELECT_EQUIP                1030
 #define IDC_REINFORCEMENT_LOG           1031
+#define IDC_CHANGE_CURRENT_LEVEL        1032
+#define IDC_TAB_CONTROL                 1033
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        130
+#define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1032
+#define _APS_NEXT_CONTROL_VALUE         1034
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -12,9 +12,11 @@
 #include<bits/stdc++.h>
 #include<random>
 #endif //PCH_H
+#include <afxcontrolbars.h>
 using namespace std;
 
 typedef long long ll;
 
 extern random_device rd;
 extern mt19937 gen;
+typedef uniform_int_distribution<ll> ud;
