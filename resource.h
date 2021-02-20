@@ -60,10 +60,11 @@
 #define IDC_INITIALIZE                  1036
 #define IDC_REINFORCE_PRICE             1036
 #define IDC_OPTION1_ACTIVITY            1037
-#define IDC_REINFORCE4                  1037
 #define IDC_APPLY_PRICE                 1037
 #define IDC_OPTION1_REMAIN              1038
 #define IDC_OPTION2_ACTIVITY            1039
+#define IDC_REINFORCE_PRICE2            1039
+#define IDC_NO_ADDITIONAL_COUNT         1039
 #define IDC_OPTION2_REMAIN              1040
 #define IDC_OPTION3_ACTIVITY            1041
 #define IDC_OPTION3_REMAIN              1042

@@ -139,4 +139,6 @@ public:
 	ll GetReinforcePrice();
 	afx_msg void OnEnChangeArmorPrice();
 	afx_msg void OnBnClickedApplyPrice();
+	void UpdatePriceInformation();
+	double noAdditionalCount;
 };

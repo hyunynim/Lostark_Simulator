@@ -50,8 +50,8 @@ CReinforceSimulator::CReinforceSimulator(CWnd* pParent /*=nullptr*/)
 	, additiona2PricePer1Percent(0)
 	, additiona3PricePer1Percent(0)
 	, reinforcePrice(0)
+	, noAdditionalCount(0)
 {
-
 }
 
 CReinforceSimulator::~CReinforceSimulator()
@@ -100,6 +100,7 @@ void CReinforceSimulator::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_ADDITIONAL2_PRICE_PER_1PERCENT, additiona2PricePer1Percent);
 	DDX_Text(pDX, IDC_ADDITIONAL3_PRICE_PER_1PERCENT, additiona3PricePer1Percent);
 	DDX_Text(pDX, IDC_REINFORCE_PRICE, reinforcePrice);
+	DDX_Text(pDX, IDC_NO_ADDITIONAL_COUNT, noAdditionalCount);
 }
 
 
@@ -226,6 +227,7 @@ void CReinforceSimulator::OnBnClickedReinforce()
 			setAdditional4 = FALSE;
 			additionalMax = 0;
 
+			UpdatePriceInformation();
 			UpdateData(FALSE);
 
 			UpdateSlider();
@@ -241,6 +243,7 @@ void CReinforceSimulator::OnBnClickedReinforce()
 				++meetMrJang;
 			}
 
+			UpdatePriceInformation();
 			UpdateData(FALSE);
 			if (curCom >= 10000) {
 				additional1Value = 0;
@@ -386,6 +389,7 @@ void CReinforceSimulator::UpdateSliderString() {
 
 	additionalProb = min(additionalProb, additionalLimitProbability[currentLevel]);
 	UpdateProbability();
+	UpdatePriceInformation();
 
 }
 
@@ -461,11 +465,17 @@ void CReinforceSimulator::OnBnClickedApplyPrice()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
+	UpdatePriceInformation();
+	UpdateData(FALSE);
+}
+
+void CReinforceSimulator::UpdatePriceInformation() {
 	reinforcePrice = GetReinforcePrice();
+	ll additionalPrice = additional1Price * additional1Value + additional2Price * additional2Value + additional3Price * additional3Value;
+
+	noAdditionalCount = (double)reinforcePrice / (reinforcePrice - additionalPrice);
 
 	additiona1PricePer1Percent = (ll)((double)100 / additional1Probability[currentLevel] * additional1Price);
 	additiona2PricePer1Percent = (ll)((double)100 / additional2Probability[currentLevel] * additional2Price);
 	additiona3PricePer1Percent = (ll)((double)100 / additional3Probability[currentLevel] * additional3Price);
-
-	UpdateData(FALSE);
 }
