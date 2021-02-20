@@ -132,8 +132,8 @@ void CReinforceSimulator::Initialize(int lvl) {
 	Initialize();
 	currentLevel = lvl;
 	curProb = probability[currentLevel];
-	sprintf(msg, "%lld.%lld%%%", curProb / 100, curProb % 100);
-	currentProbability = msg;
+
+	UpdateProbability();
 
 	sprintf(msg, "%lld.%lld%%%", curCom / 100, curCom % 100);
 	currentComulative = msg;
@@ -144,10 +144,7 @@ void CReinforceSimulator::Initialize(int lvl) {
 }
 void CReinforceSimulator::Initialize() {
 	UpdateData(TRUE);
-	additional1Slider.SetRangeMax(48);
-	additional2Slider.SetRangeMax(24);
-	additional3Slider.SetRangeMax(6);
-
+	UpdateSlider();
 
 	comulativeGold = 0;
 	comulativeCount = 0;
@@ -170,12 +167,12 @@ void CReinforceSimulator::Initialize() {
 	sprintf(msg, "%lld.%lld%%%", curCom / 100, curCom % 100);
 	currentComulative = msg;
 
-	additional1String = "0/0";
-	additional2String = "0/0";
-	additional3String = "0/0";
 	reinforcementLog = "";
 	setAdditional4Control.EnableWindow(1);
 	setAdditional4 = FALSE;
+
+	additionalProb = 0;
+
 	UpdateData(FALSE);
 
 }
@@ -201,18 +198,16 @@ void CReinforceSimulator::OnBnClickedReinforce()
 			if (setAdditional4)
 				comulativeGold += armorAdditionalPrice;
 		}
-		additional1Slider.SetRangeMax(additionalLimit[currentLevel]);
-		additional2Slider.SetRangeMax(additionalLimit[currentLevel] / 2);
-		additional3Slider.SetRangeMax(additionalLimit[currentLevel] / 6);
+		comulativeGold += additional1Price * additional1Value + additional2Price * additional2Value + additional3Price * additional3Value;
+
+
 		++comulativeCount;
 		++currentCount;
 		ll cur = probability[currentLevel];
 
-		if (curCom >= 10000)
-			curProb = 10000;
 
 		ud d(0, 9999);
-		if (d(gen) < curProb + (setAdditional4 ? 1000 : 0)) {
+		if (d(gen) < GetCurrentProbability()) {
 			sprintf(msg, "(%d회) %s +%d강화 성공(%d회)\r\n", comulativeCount, curSel < 1 ? "무기" : "방어구", currentLevel + 1, currentCount);
 			reinforcementLog += msg;
 			++currentLevel;
@@ -224,17 +219,29 @@ void CReinforceSimulator::OnBnClickedReinforce()
 			else
 				curProb = 0;
 			currentCount = 0;
+
+
 			setAdditional4 = FALSE;
+			additionalMax = 0;
+
+			UpdateData(FALSE);
+
+			UpdateSlider();
 		}
 		else {
 			if (!printFailLog) {
 				sprintf(msg, "(%d회) %s +%d강화 실패\r\n", comulativeCount, curSel < 1 ? "무기" : "방어구", currentLevel + 1, currentCount);
 				reinforcementLog += msg;
 			}
-			curCom = min({ 10000LL, curCom + (ll)(curProb * 0.465) });
+			curCom = min({ 10000LL, curCom + (ll)(GetCurrentProbability() * 0.465) });
 			curProb = min({ curProb + cur / 10, cur * 2, 10000LL });
-			if (curCom == 10000)
+			if (curCom >= 10000)
 				++meetMrJang;
+
+			UpdateData(FALSE);
+
+			if (!additionalMax)
+				UpdateSlider();
 		}
 		UpdateCurrentValue();
 	}
@@ -304,12 +311,78 @@ void CReinforceSimulator::OnNMCustomdrawAdditional1Slider(NMHDR* pNMHDR, LRESULT
 {
 	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+	UpdateSliderString();
 	*pResult = 0;
+	UpdateData(FALSE);
 }
 
 void CReinforceSimulator::OnNMCustomdrawAdditional2Slider(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+	UpdateSliderString();
 	*pResult = 0;
+	UpdateData(FALSE);
+}
+
+void CReinforceSimulator::OnNMCustomdrawAdditional3Slider(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+	UpdateSliderString();
+	*pResult = 0;
+	UpdateData(FALSE);
+}
+
+void CReinforceSimulator::UpdateSlider() {
+	additional1Slider.SetPos(0);
+	additional2Slider.SetPos(0);
+	additional3Slider.SetPos(0);
+
+	additional1Value = additional2Value = additional3Value = 0;
+
+	additional1Slider.SetRangeMax(additionalLimit[currentLevel]);
+	additional2Slider.SetRangeMax(additionalLimit[currentLevel] / 2);
+	additional3Slider.SetRangeMax(additionalLimit[currentLevel] / 6);
+
+	UpdateSliderString();
+}
+void CReinforceSimulator::UpdateSliderString() {
+	sprintf(msg, "%d/%d", additional1Value, additionalLimit[currentLevel]);
+	additional1String = msg;
+
+	sprintf(msg, "%d/%d", additional2Value, additionalLimit[currentLevel] / 2);
+	additional2String = msg;
+
+	sprintf(msg, "%d/%d", additional3Value, additionalLimit[currentLevel] / 6);
+	additional3String = msg;
+
+	additionalProb = additional1Value * additional1Probability[currentLevel]
+		+ additional2Value * additional2Probability[currentLevel]
+		+ additional3Value * additional3Probability[currentLevel];
+
+	additionalProb = min(additionalProb, additionalLimitProbability[currentLevel]);
+	UpdateProbability();
+
+}
+
+void CReinforceSimulator::UpdateProbability() {
+	ll prob = GetCurrentProbability();
+	sprintf(msg, "%lld.%lld%%%", prob / 100, prob % 100);
+	currentProbability = msg;
+}
+ll CReinforceSimulator::GetCurrentProbability() {
+	if (curCom >= 10000) return 10000;
+	
+	ll res = curProb + (setAdditional4 ? 1000 : 0) + additionalProb;
+
+	if (res < 0)
+		res = 0LL;
+	if (res > 10000)
+		res = 10000;
+
+	return res;
 }
