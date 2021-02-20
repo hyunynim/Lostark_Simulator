@@ -4,4 +4,5 @@
  - First commit
  - Make GUI skeleton
  - Set static variables for simulation
- - Simulation for weapon reinforcement
+ - Simulation for weapon, armor reinforcement
+ - Additional option
