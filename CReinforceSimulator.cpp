@@ -390,7 +390,6 @@ void CReinforceSimulator::UpdateSliderString() {
 	additionalProb = min(additionalProb, additionalLimitProbability[currentLevel]);
 	UpdateProbability();
 	UpdatePriceInformation();
-
 }
 
 void CReinforceSimulator::UpdateProbability() {
